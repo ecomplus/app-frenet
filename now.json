@@ -4,6 +4,19 @@
     {
       "src": "src/index.js",
       "use": "@now/node"
+    },
+    {
+      "src": "src/calculate.js",
+      "use": "@now/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/calculate",
+      "methods": [
+        "POST"
+      ],
+      "dest": "/src/calculate.js"
     }
   ]
 }
