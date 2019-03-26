@@ -22,3 +22,5 @@ hardseted by the merchant on app data.
 ## Deployment
 
 CD with Zeit Now as [Node.js serverless app](https://zeit.co/docs/v2/deployments/official-builders/node-js-now-node/).
+
+Scheduled tasks (_tracking_) triggered with [Zapier](https://zapier.com/).
