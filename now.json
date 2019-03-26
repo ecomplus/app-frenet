@@ -2,12 +2,8 @@
   "version": 2,
   "builds": [
     {
-      "src": "tracking.js",
+      "src": "src/index.js",
       "use": "@now/node"
-    },
-    {
-      "src": "calculate.js",
-      "use": "@now/static"
     }
   ]
 }
