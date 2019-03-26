@@ -1,0 +1,13 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "tracking.js",
+      "use": "@now/node"
+    },
+    {
+      "src": "calculate.js",
+      "use": "@now/static"
+    }
+  ]
+}
