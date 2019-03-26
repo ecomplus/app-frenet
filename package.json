@@ -1,0 +1,37 @@
+{
+  "name": "app-frenet",
+  "version": "0.0.1",
+  "description": "E-Com Plus app to integrate Frenet shipping gateway",
+  "main": "src/index.js",
+  "private": true,
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ecomclub/app-frenet.git"
+  },
+  "keywords": [
+    "ecomplus",
+    "frenet",
+    "ecomplus-app",
+    "shipping"
+  ],
+  "author": "E-Com Club",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ecomclub/app-frenet/issues"
+  },
+  "homepage": "https://github.com/ecomclub/app-frenet#readme",
+  "devDependencies": {
+    "@commitlint/cli": "^7.5.2",
+    "@commitlint/config-conventional": "^7.5.0",
+    "husky": "^1.3.1",
+    "standard": "^12.0.1"
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+    }
+  }
+}
