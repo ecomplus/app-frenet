@@ -114,6 +114,6 @@ module.exports = (request, response) => {
     .catch(e => {
       return response
         .writeHead(400, { 'Content-Type': 'application/json' })
-        .end({ 'Error: ' + e })
+        .end({ 'Error: ': e })
     })
 }
