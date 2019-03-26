@@ -16,7 +16,7 @@
       "methods": [
         "POST"
       ],
-      "dest": "/src/calculate.js"
+      "dest": "src/calculate.js"
     }
   ]
 }
