@@ -1,15 +1,21 @@
 'use strict'
 const rq = require('request')
 module.exports = (request, response) => {
-  let body = ''
+  let body = []
   const frenetApiUri = 'http://api.frenet.com.br/shipping/quote'
   //
   request.on('data', function (chunk) {
-    body += chunk
+    body.push(chunk)
   })
 
   request.on('end', function () {
-    body = JSON.parse(body)
+    try {
+      body = JSON.parse(Buffer.concat(body).toString('utf8'))
+    } catch (e) {
+      return response
+        .writeHead(400, { 'Content-Type': 'application/json' })
+        .end({ status: 400, message: 'Not acceptable, body content must be a valid JSON with UTF-8 charset' })
+    }
   })
   //
   const { application, params } = body
@@ -22,12 +28,7 @@ module.exports = (request, response) => {
     if (!items || !from || !to || !subtotal) {
       let resp = {
         'status': 400,
-        'message': 'Invalid value on resource ID',
-        'user_message': {
-          'en_us': 'The informed ID is invalid',
-          'pt_br': 'O ID informado é inválido'
-        },
-        'more_info': null
+        'message': 'invalid request, post must has properties `items`, `from`, `to` and `subtotal`'
       }
       return response
         .writeHead(400, { 'Content-Type': 'application/json' })
