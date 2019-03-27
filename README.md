@@ -18,13 +18,3 @@ hardseted by the merchant on app data.
 
 - https://frenetapi.docs.apiary.io/
 - https://github.com/ecomclub/modules-api/tree/master/docs
-
-## Deployment
-
-CD with Zeit Now as
-[Node.js serverless app](https://zeit.co/docs/v2/deployments/official-builders/node-js-now-node/).
-
-Deployed to:
-https://app-frenet-git-master.ecomplus.now.sh/
-
-Scheduled tasks (_tracking_) triggered with [Zapier](https://zapier.com/).
