@@ -4,14 +4,15 @@ module.exports = (request, response) => {
   let body = []
   const frenetApiUri = 'http://api.frenet.com.br/shipping/quote'
   //
-  response.end(request)
+  console.log(request)
   request.on('data', function (chunk) {
-    response.end(chunk)
+    console.log(chunk)
     body.push(chunk)
   })
 
   request.on('end', function () {
     try {
+      console.log(body)
       body = JSON.parse(Buffer.concat(body).toString('utf8'))
     } catch (e) {
       return response
