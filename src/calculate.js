@@ -1,11 +1,20 @@
 'use strict'
 const rq = require('request')
 module.exports = (request, response) => {
+  let body = ''
   const frenetApiUri = 'http://api.frenet.com.br/shipping/quote'
   //
-  const { application, params } = request.body
-  const frenetToken = application.hidden_data.frenet_access_token
+  request.on('data', function (chunk) {
+    body += chunk
+  })
+
+  request.on('end', function () {
+    body = JSON.parse(body)
+  })
   //
+  const { application, params } = body
+  const frenetToken = application.hidden_data.frenet_access_token
+
   // const storeId = request.headers['x-store-id']
 
   //
@@ -21,7 +30,7 @@ module.exports = (request, response) => {
         'more_info': null
       }
       return response
-        .writeHead(200, { 'Content-Type': 'application/json' })
+        .writeHead(400, { 'Content-Type': 'application/json' })
         .end(resp)
     }
     //
@@ -116,4 +125,5 @@ module.exports = (request, response) => {
         .writeHead(400, { 'Content-Type': 'application/json' })
         .end({ 'Error: ': e })
     })
+
 }
