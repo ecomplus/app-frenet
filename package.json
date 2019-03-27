@@ -35,6 +35,7 @@
     }
   },
   "dependencies": {
+    "micro": "^9.3.3",
     "request": "^2.88.0"
   }
 }
