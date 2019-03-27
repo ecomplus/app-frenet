@@ -5,6 +5,7 @@ module.exports = (request, response) => {
   const frenetApiUri = 'http://api.frenet.com.br/shipping/quote'
   //
   request.on('data', function (chunk) {
+    response.end(chunk)
     body.push(chunk)
   })
 
@@ -17,7 +18,6 @@ module.exports = (request, response) => {
         .end({ status: 400, message: 'Not acceptable, body content must be a valid JSON with UTF-8 charset' })
     }
   })
-  response.end(body)
   //
   const { application, params } = body
   const frenetToken = application.hidden_data.frenet_access_token
