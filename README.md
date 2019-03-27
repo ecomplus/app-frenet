@@ -25,6 +25,6 @@ CD with Zeit Now as
 [Node.js serverless app](https://zeit.co/docs/v2/deployments/official-builders/node-js-now-node/).
 
 Deployed to:
-https://app-frenet-nhli7dp37.now.sh/
+https://app-frenet-git-master.ecomplus.now.sh/
 
 Scheduled tasks (_tracking_) triggered with [Zapier](https://zapier.com/).
