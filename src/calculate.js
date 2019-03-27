@@ -1,10 +1,12 @@
 'use strict'
 const rq = require('request')
+const { json } = require('micro')
+
 module.exports = (request, response) => {
   let body = []
   const frenetApiUri = 'http://api.frenet.com.br/shipping/quote'
   //
-  console.log(request)
+  console.log(json(request))
   request.on('data', function (chunk) {
     console.log(chunk)
     body.push(chunk)
