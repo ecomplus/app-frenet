@@ -1,26 +1,18 @@
 'use strict'
-const rq = require('request')
-const { json } = require('micro')
 
-module.exports = async (request, response) => {
+const express = require('express')
+const bodyParser = require('body-parser')
+const rq = require('request')
+
+const calculate = express()
+module.exports = calculate
+calculate.use(bodyParser.json())
+
+calculate.post('*', (request, response) => {
   const frenetApiUri = 'http://api.frenet.com.br/shipping/quote'
   //
-  let body = await json(request)
-  request.on('data', function (chunk) {
-    console.log(chunk)
-    body.push(chunk)
-  })
-
-  request.on('end', function () {
-    try {
-      console.log(body)
-      body = JSON.parse(Buffer.concat(body).toString('utf8'))
-    } catch (e) {
-      return response
-        .writeHead(400, { 'Content-Type': 'application/json' })
-        .end({ status: 400, message: 'Not acceptable, body content must be a valid JSON with UTF-8 charset' })
-    }
-  })
+  let body = request.body
+  console.log(body)
   //
   const { application, params } = body
   const frenetToken = application.hidden_data.frenet_access_token
@@ -35,8 +27,8 @@ module.exports = async (request, response) => {
         'message': 'invalid request, post must has properties `items`, `from`, `to` and `subtotal`'
       }
       return response
-        .writeHead(400, { 'Content-Type': 'application/json' })
-        .end(resp)
+        .set('Content-Type', 'application/json')
+        .send(400, resp)
     }
     //
     return {
@@ -122,13 +114,12 @@ module.exports = async (request, response) => {
     .then(result => {
       let resp = toEcomplusSchema(result, params.to, application.hidden_data.from)
       return response
-        .writeHead(200, { 'Content-Type': 'application/json' })
-        .end(resp)
+        .set('Content-Type', 'application/json')
+        .send(200, resp)
     })
     .catch(e => {
       return response
-        .writeHead(400, { 'Content-Type': 'application/json' })
-        .end({ 'Error: ': e })
+        .set('Content-Type', 'application/json')
+        .send(400, { 'error': e })
     })
-
-}
+})
