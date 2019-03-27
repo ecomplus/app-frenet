@@ -4,6 +4,7 @@ module.exports = (request, response) => {
   let body = []
   const frenetApiUri = 'http://api.frenet.com.br/shipping/quote'
   //
+  response.end(request)
   request.on('data', function (chunk) {
     response.end(chunk)
     body.push(chunk)
