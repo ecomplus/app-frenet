@@ -18,3 +18,13 @@ hardseted by the merchant on app data.
 
 - https://frenetapi.docs.apiary.io/
 - https://github.com/ecomclub/modules-api/tree/master/docs
+
+## Production server
+
+Published at https://frenet.ecomplus.biz
+
+### Continuous deployment
+
+When app version is **production ready**,
+[create a new release](https://github.com/ecomclub/app-frenet/releases)
+to run automatic deploy from `master` branch.
