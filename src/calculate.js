@@ -22,21 +22,39 @@ calculate.post('', (request, response) => {
           .send(400, resp)
       }
       //
-      return {
-        'SellerCEP': from.zip.replace('-', ''),
-        'RecipientCEP': to.zip.replace('-', ''),
-        'ShipmentInvoiceValue': subtotal,
-        'ShippingItemArray': getItens(items)
+      const schema = {
+        SellerCEP: from.zip.replace('-', ''),
+        RecipientCEP: to.zip.replace('-', ''),
+        ShipmentInvoiceValue: subtotal,
+        ShippingItemArray: []
       }
+
+      items.forEach(item => {
+        schema.ShippingItemArray.push({
+          'Weight': (item.weight.value / 1000) || '1',
+          'Length': (item.hasOwnProperty('dimensions') && item.dimensions.hasOwnProperty('length')) ? item.dimensions.length.value : '1',
+          'Height': (item.hasOwnProperty('dimensions') && item.dimensions.hasOwnProperty('height')) ? item.dimensions.height.value : '1',
+          'Width': (item.hasOwnProperty('dimensions') && item.dimensions.hasOwnProperty('width')) ? item.dimensions.width.value : '1',
+          'Quantity': item.quantity
+        })
+      })
+      console.log(schema)
+      return schema
+      // return {
+      //   'SellerCEP': from.zip.replace('-', ''),
+      //   'RecipientCEP': to.zip.replace('-', ''),
+      //   'ShipmentInvoiceValue': subtotal,
+      //   'ShippingItemArray': getItens(items)
+      // }
     }
 
     const getItens = items => {
       let result = items.map(item => {
         return {
-          'Weight': item.weight.value,
-          'Length': item.dimensions.length.value,
-          'Height': item.dimensions.height.value,
-          'Width': item.dimensions.width.value,
+          'Weight': item.weight.value || 1,
+          'Length': (item.hasOwnProperty('dimensions') && item.dimensions.hasOwnProperty('length')) ? item.dimensions.length.value : 1,
+          'Height': (item.hasOwnProperty('dimensions') && item.dimensions.hasOwnProperty('height')) ? item.dimensions.height.value : 1,
+          'Width': (item.hasOwnProperty('dimensions') && item.dimensions.hasOwnProperty('width')) ? item.dimensions.width.value : 1,
           'Quantity': item.quantity
         }
       })
@@ -107,6 +125,7 @@ calculate.post('', (request, response) => {
     //
     apiRequest(calculate)
       .then(result => {
+        console.log(JSON.stringify(result))
         let objResponse = {}
         objResponse.shipping_services = toEcomplusSchema(result, params.to, application.hidden_data.from) || []
         if (application.hasOwnProperty('data') && application.data.hasOwnProperty('free_shipping_from_value')) {
