@@ -1,6 +1,6 @@
 {
   "name": "app-frenet",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "E-Com Plus app to integrate Frenet shipping gateway",
   "main": "main.js",
   "private": true,
@@ -36,7 +36,7 @@
   },
   "dependencies": {
     "console-files": "^2.2.0",
-    "ecomplus-app-sdk": "^1.9.6",
+    "ecomplus-app-sdk": "^1.9.7",
     "express": "^4.16.4",
     "request": "^2.88.0"
   }
