@@ -2,7 +2,7 @@
 
 const calculate = require('express').Router()
 const rq = require('request')
-
+const logger = require('console-files')
 calculate.post('', (request, response) => {
   // retrieves application and params from body
   const { application, params } = request.body
@@ -137,6 +137,7 @@ calculate.post('', (request, response) => {
           .send(objResponse)
       })
       .catch(e => {
+        logger.log('CALCULATE_RESPONSE', e)
         return response
           .status(400)
           .send({ 'error': e })
@@ -146,6 +147,7 @@ calculate.post('', (request, response) => {
       'status': 400,
       'message': 'Frenet token not found'
     }
+    logger.log('CALCULATE_RESPONSE', e)
     response.status(400)
     return response.send(resp)
   }
