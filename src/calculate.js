@@ -1,28 +1,33 @@
 'use strict'
-
 const calculate = require('express').Router()
 const rq = require('request')
 const logger = require('console-files')
+
 calculate.post('', (request, response) => {
   // retrieves application and params from body
-  logger.log(JSON.stringify(request.body))
   const { application, params } = request.body
+  
   // token
   let frenetToken = (application.hasOwnProperty('hidden_data') && application.hidden_data.hasOwnProperty('frenet_access_token')) ? application.hidden_data.frenet_access_token : undefined
 
+  // token was sent?
   if (frenetToken) {
-    //
-    const toFrenetSchema = (items, subtotal, from, to) => {
-      if (!items || !from || !to || !subtotal) {
-        let resp = {
-          'status': 400,
-          'message': 'invalid request, post must has properties `items`, `from`, `to` and `subtotal`'
-        }
-        return response
-          .set('Content-Type', 'application/json')
-          .send(400, resp)
+    let items = params.items
+    let subtotal = params.subtotal
+    let from = application.hidden_data.from
+    let to = params.to
+
+    // checks if required params was sent at request
+    if (!items || !from || !to || !subtotal) {
+      let resp = {
+        error: true,
+        message: 'invalid request, post must have properties `items`, `from`, `to` and `subtotal`'
       }
-      //
+      return response.status(400).send(resp)
+    }
+
+    // parse frenet schema
+    const toFrenetSchema = (items, subtotal, from, to) => {
       const schema = {
         SellerCEP: from.zip.replace('-', ''),
         RecipientCEP: to.zip.replace('-', ''),
@@ -39,29 +44,11 @@ calculate.post('', (request, response) => {
           'Quantity': item.quantity
         })
       })
-      console.log(schema)
+
       return schema
-      // return {
-      //   'SellerCEP': from.zip.replace('-', ''),
-      //   'RecipientCEP': to.zip.replace('-', ''),
-      //   'ShipmentInvoiceValue': subtotal,
-      //   'ShippingItemArray': getItens(items)
-      // }
     }
 
-    const getItens = items => {
-      let result = items.map(item => {
-        return {
-          'Weight': item.weight.value || 1,
-          'Length': (item.hasOwnProperty('dimensions') && item.dimensions.hasOwnProperty('length')) ? item.dimensions.length.value : 1,
-          'Height': (item.hasOwnProperty('dimensions') && item.dimensions.hasOwnProperty('height')) ? item.dimensions.height.value : 1,
-          'Width': (item.hasOwnProperty('dimensions') && item.dimensions.hasOwnProperty('width')) ? item.dimensions.width.value : 1,
-          'Quantity': item.quantity
-        }
-      })
-      return result
-    }
-    //
+    // parse frenet response to ecomplus module
     const toEcomplusSchema = (shippingServices, to, from) => {
       let schema = shippingServices.ShippingSevicesArray.filter(service => !service.Error)
         .map(service => {
@@ -99,7 +86,7 @@ calculate.post('', (request, response) => {
       return schema
     }
 
-    //
+    // request
     const apiRequest = data => {
       return new Promise((resolve, reject) => {
         let options = {
@@ -121,12 +108,12 @@ calculate.post('', (request, response) => {
       })
     }
 
-    let calculate = toFrenetSchema(params.items, params.subtotal, application.hidden_data.from, params.to)
+    // schema
+    let schema = toFrenetSchema(items, subtotal, from, to)
 
-    //
-    apiRequest(calculate)
+    // request frenet api
+    apiRequest(schema)
       .then(result => {
-        console.log(JSON.stringify(result))
         let objResponse = {}
         objResponse.shipping_services = toEcomplusSchema(result, params.to, application.hidden_data.from) || []
         if (application.hasOwnProperty('data') && application.data.hasOwnProperty('free_shipping_from_value')) {
@@ -139,18 +126,14 @@ calculate.post('', (request, response) => {
       })
       .catch(e => {
         logger.log('CALCULATE_RESPONSE', e)
-        return response
-          .status(400)
-          .send({ 'error': e })
+        return response.status(400).send({ 'error': e })
       })
   } else {
-    let resp = {
-      'status': 400,
-      'message': 'Frenet token not found'
-    }
-    logger.log('CALCULATE_RESPONSE', e)
-    response.status(400)
-    return response.send(resp)
+    logger.log('CALCULATE_RESPONSE: token not found')
+    return response.status(400).send({
+      error: true,
+      message: 'token not found'
+    })
   }
 })
 
