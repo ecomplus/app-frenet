@@ -72,8 +72,8 @@ calculate.post('', (request, response) => {
                 'city': to.city,
                 'province_code': to.province_code
               },
-              'price': service.ShippingPrice,
-              'total_price': service.ShippingPrice,
+              'price': parseFloat(service.ShippingPrice),
+              'total_price': parseFloat(service.ShippingPrice),
               'custom_fields': [
                 {
                   'field': 'by_frenet',
