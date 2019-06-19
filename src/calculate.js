@@ -74,7 +74,7 @@ calculate.post('', (request, response) => {
                 'province_code': to.province_code
               },
               'delivery_time': {
-                'days': service.DeliveryTime
+                'days': parseInt(service.DeliveryTime)
               },
               'price': parseFloat(service.ShippingPrice),
               'total_price': parseFloat(service.ShippingPrice),
