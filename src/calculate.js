@@ -50,6 +50,7 @@ calculate.post('', (request, response) => {
 
     // parse frenet response to ecomplus module
     const toEcomplusSchema = (shippingServices, to, from) => {
+      console.log(JSON.stringify(shippingServices))
       let schema = shippingServices.ShippingSevicesArray.filter(service => !service.Error)
         .map(service => {
           return {
@@ -71,6 +72,9 @@ calculate.post('', (request, response) => {
                 'borough': to.borough,
                 'city': to.city,
                 'province_code': to.province_code
+              },
+              'delivery_time': {
+                'days': service.DeliveryTime
               },
               'price': parseFloat(service.ShippingPrice),
               'total_price': parseFloat(service.ShippingPrice),
