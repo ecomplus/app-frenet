@@ -6,7 +6,7 @@ const logger = require('console-files')
 calculate.post('', (request, response) => {
   // retrieves application and params from body
   const { application, params } = request.body
-  
+  logger.log(JSON.stringify(request.body))
   // token
   let frenetToken = (application.hasOwnProperty('hidden_data') && application.hidden_data.hasOwnProperty('frenet_access_token')) ? application.hidden_data.frenet_access_token : undefined
 
