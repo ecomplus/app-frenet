@@ -6,7 +6,7 @@ const logger = require('console-files')
 calculate.post('', (request, response) => {
   // retrieves application and params from body
   const { application, params } = request.body
-  
+
   // token
   let frenetToken = (application.hasOwnProperty('hidden_data') && application.hidden_data.hasOwnProperty('frenet_access_token')) ? application.hidden_data.frenet_access_token : undefined
 
@@ -17,13 +17,21 @@ calculate.post('', (request, response) => {
     let from = application.hidden_data.from
     let to = params.to
 
+    const freeShippingFromValue = () => {
+      if (application.hasOwnProperty('data') && application.data.hasOwnProperty('free_shipping_from_value')) {
+        return application.data.free_shipping_from_value
+      } else {
+        return ''
+      }
+    }
+
     // checks if required params was sent at request
     if (!items || !from || !to || !subtotal) {
       let resp = {
-        error: true,
-        message: 'invalid request, post must have properties `items`, `from`, `to` and `subtotal`'
+        shipping_services: [],
+        free_shipping_from_value: freeShippingFromValue()
       }
-      return response.status(400).send(resp)
+      return response.status(200).send(resp)
     }
 
     // parse frenet schema
@@ -37,7 +45,7 @@ calculate.post('', (request, response) => {
 
       items.forEach(item => {
         schema.ShippingItemArray.push({
-          'Weight': (item.weight.value / 1000) || '1',
+          'Weight': item.weight.unit === 'kg' ? (item.weight.value * 100 / 1000) : item.weight.value,
           'Length': (item.hasOwnProperty('dimensions') && item.dimensions.hasOwnProperty('length')) ? item.dimensions.length.value : '1',
           'Height': (item.hasOwnProperty('dimensions') && item.dimensions.hasOwnProperty('height')) ? item.dimensions.height.value : '1',
           'Width': (item.hasOwnProperty('dimensions') && item.dimensions.hasOwnProperty('width')) ? item.dimensions.width.value : '1',
@@ -120,9 +128,7 @@ calculate.post('', (request, response) => {
       .then(result => {
         let objResponse = {}
         objResponse.shipping_services = toEcomplusSchema(result, params.to, application.hidden_data.from) || []
-        if (application.hasOwnProperty('data') && application.data.hasOwnProperty('free_shipping_from_value')) {
-          objResponse.free_shipping_from_value = application.data.free_shipping_from_value
-        }
+        objResponse.free_shipping_from_value = freeShippingFromValue
 
         return response
           .status(200)
@@ -134,7 +140,7 @@ calculate.post('', (request, response) => {
       })
   } else {
     logger.log('CALCULATE_RESPONSE: token not found')
-    return response.status(400).send({
+    return response.status(401).send({
       error: true,
       message: 'token not found'
     })
