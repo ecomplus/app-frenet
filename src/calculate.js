@@ -7,7 +7,7 @@ calculate.post('', (request, response) => {
   // retrieves application and params from body
   const { application, params } = request.body
   // token
-  let frenetToken = (application.hasOwnProperty('hidden_data') && application.hidden_data.hasOwnProperty('frenet_access_token')) ? application.hidden_data.frenet_access_token : undefined
+  const frenetToken = application.hidden_data && application.hidden_data.frenet_access_token
 
   // token was sent?
   if (frenetToken) {
@@ -41,14 +41,30 @@ calculate.post('', (request, response) => {
         ShipmentInvoiceValue: subtotal,
         ShippingItemArray: []
       }
-
+      
       items.forEach(item => {
+        const { dimensions } = item
+        const getDimension = side => {
+          if (dimensions && dimensions[side]) {
+            const { value, unit } = dimensions[side]
+            switch (unit) {
+              case 'm':
+                return value / 100
+              case 'dm:
+                return value / 10
+              case 'cm':
+                return value
+            }
+          }
+          return 10
+        }
+        
         schema.ShippingItemArray.push({
-          'Weight': item.weight.unit === 'kg' ? (item.weight.value * 100 / 1000) : item.weight.value,
-          'Length': (item.hasOwnProperty('dimensions') && item.dimensions.hasOwnProperty('length')) ? item.dimensions.length.value : '1',
-          'Height': (item.hasOwnProperty('dimensions') && item.dimensions.hasOwnProperty('height')) ? item.dimensions.height.value : '1',
-          'Width': (item.hasOwnProperty('dimensions') && item.dimensions.hasOwnProperty('width')) ? item.dimensions.width.value : '1',
-          'Quantity': item.quantity
+          Weight: item.weight.unit === 'g' ? (item.weight.value / 1000) : item.weight.value,
+          Length: getDimension('length'),
+          Height: getDimension('height'),
+          Width: getDimension('width'),
+          Quantity: item.quantity
         })
       })
 
@@ -57,7 +73,6 @@ calculate.post('', (request, response) => {
 
     // parse frenet response to ecomplus module
     const toEcomplusSchema = (shippingServices, to, from) => {
-      console.log(JSON.stringify(shippingServices))
       let schema = shippingServices.ShippingSevicesArray.filter(service => !service.Error)
         .map(service => {
           return {
