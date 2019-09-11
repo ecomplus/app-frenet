@@ -140,23 +140,32 @@ calculate.post('', (request, response) => {
     // request frenet api
     apiRequest(schema)
       .then(result => {
-        let objResponse = {}
-        objResponse.shipping_services = toEcomplusSchema(result, params.to, application.hidden_data.from) || []
-        objResponse.free_shipping_from_value = freeShippingFromValue
+        // check for frenet error response
+        const { ShippingSevicesArray } = result
+        if (ShippingSevicesArray && ShippingSevicesArray[0]) {
+          if (ShippingSevicesArray[0].Error && ShippingSevicesArray[0].Msg) {
+            return response.status(400).send({
+              error: 'FRENET_CALCULATE_ERR',
+              message: ShippingSevicesArray[0].Msg
+            })
+          }
+        }
 
-        return response
-          .status(200)
-          .send(objResponse)
+        response.status(200).send({
+          shipping_services: toEcomplusSchema(result, params.to, application.hidden_data.from) || [],
+          free_shipping_from_value: freeShippingFromValue()
+        })
       })
+      
       .catch(e => {
-        logger.log('CALCULATE_RESPONSE', e)
-        return response.status(400).send({ 'error': e })
+        const error = 'FRENET_REQUEST_ERROR'
+        logger.error(error, e)
+        response.status(400).send({ error })
       })
   } else {
-    logger.log('CALCULATE_RESPONSE: token not found')
-    return response.status(401).send({
+    response.status(401).send({
       error: true,
-      message: 'token not found'
+      message: 'Token not found'
     })
   }
 })
