@@ -50,7 +50,7 @@ calculate.post('', (request, response) => {
             switch (unit) {
               case 'm':
                 return value / 100
-              case 'dm:
+              case 'dm':
                 return value / 10
               case 'cm':
                 return value
