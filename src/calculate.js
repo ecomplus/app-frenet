@@ -16,21 +16,19 @@ calculate.post('', (request, response) => {
     let from = application.hidden_data.from
     let to = params.to
 
-    const freeShippingFromValue = () => {
-      if (application.hasOwnProperty('data') && application.data.hasOwnProperty('free_shipping_from_value')) {
-        return application.data.free_shipping_from_value
-      } else {
-        return ''
+    const freeShippingFromValue = resBody => {
+      if (application.data && application.data.free_shipping_from_value) {
+        resBody.free_shipping_from_value = application.data.free_shipping_from_value
       }
     }
 
     // checks if required params was sent at request
     if (!items || !from || !to || !subtotal) {
-      let resp = {
-        shipping_services: [],
-        free_shipping_from_value: freeShippingFromValue()
+      const resBody = {
+        shipping_services: []
       }
-      return response.status(200).send(resp)
+      freeShippingFromValue(resBody)
+      return response.status(200).send(resBody)
     }
 
     // parse frenet schema
@@ -41,7 +39,7 @@ calculate.post('', (request, response) => {
         ShipmentInvoiceValue: subtotal,
         ShippingItemArray: []
       }
-      
+
       items.forEach(item => {
         const { dimensions } = item
         const getDimension = side => {
@@ -58,7 +56,7 @@ calculate.post('', (request, response) => {
           }
           return 10
         }
-        
+
         schema.ShippingItemArray.push({
           Weight: item.weight.unit === 'g' ? (item.weight.value / 1000) : item.weight.value,
           Length: getDimension('length'),
@@ -151,12 +149,13 @@ calculate.post('', (request, response) => {
           }
         }
 
-        response.status(200).send({
-          shipping_services: toEcomplusSchema(result, params.to, application.hidden_data.from) || [],
-          free_shipping_from_value: freeShippingFromValue()
-        })
+        const resBody = {
+          shipping_services: toEcomplusSchema(result, params.to, application.hidden_data.from) || []
+        }
+        freeShippingFromValue(resBody)
+        response.status(200).send(resBody)
       })
-      
+
       .catch(e => {
         const error = 'FRENET_REQUEST_ERROR'
         logger.error(error, e)
