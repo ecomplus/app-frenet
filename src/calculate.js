@@ -57,8 +57,10 @@ calculate.post('', (request, response) => {
           return 10
         }
 
+        let weight = item.weight || {}
+        weight.value = weight.value || 1
         schema.ShippingItemArray.push({
-          Weight: item.weight.unit === 'g' ? (item.weight.value / 1000) : item.weight.value,
+          Weight: weight.unit === 'g' ? (weight.value / 1000) : weight.value,
           Length: getDimension('length'),
           Height: getDimension('height'),
           Width: getDimension('width'),
