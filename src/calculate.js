@@ -1,174 +1,157 @@
 'use strict'
 const calculate = require('express').Router()
-const rq = require('request')
-const logger = require('console-files')
+const request = require('request')
 
-calculate.post('', (request, response) => {
-  // retrieves application and params from body
-  const { application, params } = request.body
-  // token
-  const frenetToken = application.hidden_data && application.hidden_data.frenet_access_token
+calculate.post('', (req, res) => {
+  const { params, application } = req.body
+  // app configured options
+  const config = Object.assign({}, application.data, application.hidden_data)
 
-  // token was sent?
-  if (frenetToken) {
-    let items = params.items
-    let subtotal = params.subtotal
-    let from = application.hidden_data.from
-    let to = params.to
+  if (!config.frenet_access_token) {
+    res.status(401).send({
+      error: 'FRENET_ERR',
+      message: 'Frenet token not found on app hidden data'
+    })
+  }
 
-    const freeShippingFromValue = resBody => {
-      if (application.data && application.data.free_shipping_from_value) {
-        resBody.free_shipping_from_value = application.data.free_shipping_from_value
-      }
-    }
+  const { items, subtotal, to } = params
+  const payload = {}
+  payload.shipping_services = []
 
-    // checks if required params was sent at request
-    if (!items || !from || !to || !subtotal) {
-      const resBody = {
-        shipping_services: []
-      }
-      freeShippingFromValue(resBody)
-      return response.status(200).send(resBody)
-    }
+  if (config.free_shipping_from_value) {
+    payload.free_shipping_from_value = config.free_shipping_from_value
+  }
 
-    // parse frenet schema
-    const toFrenetSchema = (items, subtotal, from, to) => {
-      const schema = {
-        SellerCEP: from.zip.replace('-', ''),
+  if (!items || !subtotal || !to || !config.from) {
+    // parameters required to perform the request
+    return res.status(200).send(payload)
+  } else {
+    // frenet api schema
+    const frenetSchema = () => {
+      const data = {
+        SellerCEP: config.from.zip.replace('-', ''),
         RecipientCEP: to.zip.replace('-', ''),
         ShipmentInvoiceValue: subtotal,
         ShippingItemArray: []
       }
-
       items.forEach(item => {
-        const { dimensions } = item
-        const getDimension = side => {
-          if (dimensions && dimensions[side]) {
-            const { value, unit } = dimensions[side]
-            switch (unit) {
-              case 'm':
-                return value / 100
-              case 'dm':
-                return value / 10
-              case 'cm':
-                return value
-            }
-          }
-          return 10
-        }
-
-        let weight = item.weight || {}
-        weight.value = weight.value || 1
-        schema.ShippingItemArray.push({
+        const { weight, quantity } = item
+        data.ShippingItemArray.push({
           Weight: weight.unit === 'g' ? (weight.value / 1000) : weight.value,
-          Length: getDimension('length'),
-          Height: getDimension('height'),
-          Width: getDimension('width'),
-          Quantity: item.quantity
+          Length: getDimension('length', item),
+          Height: getDimension('height', item),
+          Width: getDimension('width', item),
+          Quantity: quantity
         })
       })
-
-      return schema
+      return data
     }
 
-    // parse frenet response to ecomplus module
-    const toEcomplusSchema = (shippingServices, to, from) => {
-      let schema = shippingServices.ShippingSevicesArray.filter(service => !service.Error)
-        .map(service => {
-          return {
-            'label': service.ServiceDescription,
-            'carrier': service.Carrier,
-            'service_name': service.ServiceDescription,
-            'service_code': 'FR ' + service.ServiceCode,
-            'shipping_line': {
-              'from': {
-                'zip': from.zip,
-                'street': from.street,
-                'number': from.number
-              },
-              'to': {
-                'zip': to.zip,
-                'name': to.name,
-                'street': to.street,
-                'number': to.number,
-                'borough': to.borough,
-                'city': to.city,
-                'province_code': to.province_code
-              },
-              'delivery_time': {
-                'days': parseInt(service.DeliveryTime)
-              },
-              'price': parseFloat(service.ShippingPrice),
-              'total_price': parseFloat(service.ShippingPrice),
-              'custom_fields': [
-                {
-                  'field': 'by_frenet',
-                  'value': 'true'
-                }
-              ]
-            }
-          }
-        })
-      return schema
-    }
-
-    // request
-    const apiRequest = data => {
+    // frenet api request
+    const frenetRequest = schema => {
       return new Promise((resolve, reject) => {
-        let options = {
-          method: 'POST',
-          url: 'http://api.frenet.com.br/shipping/quote',
+        const url = 'http://api.frenet.com.br/shipping/quote'
+        request(url, {
+          method: 'post',
           headers: {
             'Content-Type': 'application/json',
-            token: frenetToken
+            'token': config.frenet_access_token
           },
-          body: data,
+          body: schema,
           json: true
-        }
-        rq.post(options, (erro, resp, body) => {
-          if (erro || resp.statusCode >= 400) {
-            reject(new Error('Frenet api request failed.'))
+        }, (err, resp, body) => {
+          if (err || resp.statusCode >= 400) {
+            reject(body)
           }
           resolve(body)
         })
       })
     }
 
-    // schema
-    let schema = toFrenetSchema(items, subtotal, from, to)
+    frenetRequest(frenetSchema())
 
-    // request frenet api
-    apiRequest(schema)
       .then(result => {
         // check for frenet error response
         const { ShippingSevicesArray } = result
-        if (ShippingSevicesArray && ShippingSevicesArray[0]) {
+
+        if (ShippingSevicesArray && Array.isArray(ShippingSevicesArray) && ShippingSevicesArray.length) {
           if (ShippingSevicesArray[0].Error && ShippingSevicesArray[0].Msg) {
-            return response.status(400).send({
-              error: 'FRENET_CALCULATE_ERR',
+            return res.status(400).send({
+              error: 'FRENET_API_ERR',
               message: ShippingSevicesArray[0].Msg
             })
           }
         }
 
-        const resBody = {
-          shipping_services: toEcomplusSchema(result, params.to, application.hidden_data.from) || []
-        }
-        freeShippingFromValue(resBody)
-        response.status(200).send(resBody)
+        payload.shipping_services = ecomplusSchema(ShippingSevicesArray, to, config.from) || []
+
+        return res.status(200).send(payload)
       })
 
-      .catch(e => {
-        const error = 'FRENET_REQUEST_ERROR'
-        logger.error(error, e)
-        response.status(400).send({ error })
+      .catch(err => {
+        return res.status(500).send({
+          error: 'FRENET_API_ERR',
+          message: 'Unexpected Error Try Later',
+          erro: err
+        })
       })
-  } else {
-    response.status(401).send({
-      error: true,
-      message: 'Token not found'
-    })
   }
 })
+
+const getDimension = (side, item) => {
+  if (item.dimensions && item.dimensions[side]) {
+    const { value, unit } = item.dimensions[side]
+    switch (unit) {
+      case 'm':
+        return value / 100
+      case 'dm':
+        return value / 10
+      case 'cm':
+        return value
+    }
+  }
+  return 10
+}
+
+const ecomplusSchema = (ShippingSevicesArray, to, from) => {
+  const data = ShippingSevicesArray
+    .filter(service => !service.Error)
+    .map(service => {
+      return {
+        'label': service.ServiceDescription,
+        'carrier': service.Carrier,
+        'service_name': service.ServiceDescription,
+        'service_code': 'FR ' + service.ServiceCode,
+        'shipping_line': {
+          'from': {
+            'zip': from.zip,
+            'street': from.street,
+            'number': from.number
+          },
+          'to': {
+            'zip': to.zip,
+            'name': to.name,
+            'street': to.street,
+            'number': to.number,
+            'borough': to.borough,
+            'city': to.city,
+            'province_code': to.province_code
+          },
+          'delivery_time': {
+            'days': parseInt(service.DeliveryTime)
+          },
+          'price': parseFloat(service.ShippingPrice),
+          'total_price': parseFloat(service.ShippingPrice),
+          'custom_fields': [
+            {
+              'field': 'by_frenet',
+              'value': 'true'
+            }
+          ]
+        }
+      }
+    })
+  return data
+}
 
 module.exports = calculate
