@@ -7,7 +7,7 @@
   "type": "external",
   "modules": {
     "calculate_shipping": {
-      "endpoint": "https://frenet.ecomplus.biz/calculate",
+      "endpoint": "https://frenet.ecomplus.biz/ecom/modules/calculate",
       "enabled": true
     }
   },
@@ -68,5 +68,28 @@
   "script_uri": "https://frenet.ecomplus.biz",
   "status": "active",
   "authentication": true,
-  "auth_callback_uri": "https://frenet.ecomplus.biz/callback"
+  "auth_callback_uri": "https://frenet.ecomplus.biz/ecom/auth-callback",
+  "auth_scope": {
+    "procedures": [
+      "POST"
+    ],
+    "orders": [
+      "GET",
+      "POST",
+      "PATCH",
+      "DELETE"
+    ],
+    "orders/custom_fields": [
+      "GET"
+    ],
+    "orders/fulfillments": [
+      "GET",
+      "POST"
+    ],
+    "orders/shipping_lines": [
+      "GET",
+      "POST",
+      "PATCH"
+    ]
+  }
 }
