@@ -5,7 +5,7 @@
   "main": "main.js",
   "private": true,
   "scripts": {
-    "start": "ECOM_AUTH_DB=/var/dbs/frenet.sqlite LOGGER_OUTPUT=/var/log/nodejs/frenet.out LOGGER_ERRORS=/var/log/nodejs/frenet.error nodemon main.js",
+    "dev": "APP_NAME=frenet-dev APP_BASE_URI=https://talisson.pagekite.me ECOM_AUTH_DB=/var/dbs/frenet.sqlite LOGGER_OUTPUT=/var/log/nodejs/frenet.out LOGGER_ERRORS=/var/log/nodejs/frenet.error nodemon main.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -36,9 +36,10 @@
     }
   },
   "dependencies": {
+    "axios": "^0.19.1",
     "console-files": "^2.2.0",
     "ecomplus-app-sdk": "^1.9.7",
     "express": "^4.16.4",
-    "request": "^2.88.0"
+    "sqlite3": "^4.0.3"
   }
 }
