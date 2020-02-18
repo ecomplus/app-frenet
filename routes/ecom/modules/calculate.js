@@ -94,7 +94,7 @@ module.exports = appSdk => (req, res) => {
     })
 
     .then(services => {
-      const data = services
+      return services
         .filter(service => !service.Error)
         .map(service => {
           return {
@@ -131,10 +131,12 @@ module.exports = appSdk => (req, res) => {
             }
           }
         })
-      return data
     })
 
-    .then(calculate => res.send(calculate))
+    .then(shippingServices => {
+      payload.shipping_services = shippingServices
+      res.send(payload)
+    })
 
     .catch(err => {
       return res.status(400).send({
