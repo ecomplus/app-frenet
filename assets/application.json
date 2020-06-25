@@ -75,6 +75,10 @@
     ],
     "orders": [
       "GET"
+    ],
+    "orders/fulfillments": [
+      "POST",
+      "PATCH"
     ]
   }
 }
