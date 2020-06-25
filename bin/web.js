@@ -6,7 +6,7 @@
 const logger = require('console-files')
 // handle app authentication to Store API
 // https://github.com/ecomclub/ecomplus-app-sdk
-const { ecomAuth, ecomServerIps } = require('ecomplus-app-sdk')
+const { ecomAuth, ecomServerIps } = require('@ecomplus/application-sdk')
 
 // web server with Express
 const express = require('express')
