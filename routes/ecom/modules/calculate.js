@@ -1,7 +1,7 @@
 'use strict'
 const axios = require('axios')
 
-module.exports = appSdk => (req, res) => {
+module.exports = () => (req, res) => {
   const { storeId, body } = req
   const { params, application } = body
   const config = Object.assign({}, application.data, application.hidden_data)
@@ -39,7 +39,7 @@ module.exports = appSdk => (req, res) => {
       items.forEach(item => {
         const { weight, quantity } = item
         schema.ShippingItemArray.push({
-          Weight: weight.unit === 'g' ? (weight.value / 1000) : weight.value,
+          Weight: weight ? (weight.unit && weight.unit === 'g') ? (weight.value / 1000) : weight.value : undefined,
           Length: getDimension('length', item),
           Height: getDimension('height', item),
           Width: getDimension('width', item),
@@ -53,97 +53,83 @@ module.exports = appSdk => (req, res) => {
       err.error = error
       reject(err)
     }
-  })
+  }).then(({ schema }) => {
+    let opt = {
+      url: 'http://api.frenet.com.br/shipping/quote',
+      method: 'post',
+      headers: {
+        'Content-Type': 'application/json',
+        'token': config.frenet_access_token
+      },
+      data: schema
+    }
 
-    .then(({ schema }) => {
-      let opt = {
-        url: 'http://api.frenet.com.br/shipping/quote',
-        method: 'post',
-        headers: {
-          'Content-Type': 'application/json',
-          'token': config.frenet_access_token
-        },
-        data: schema
-      }
-      return axios(opt).then(resp => {
-        if (resp.status >= 400) {
-          const err = new Error('Error with frenet api request')
-          err.name = 'FRENET_API_ERR'
-          err.error = resp.data
-          throw err
-        } else {
-          return resp.data
-        }
-      })
-    })
-
-    .then(result => {
-      // check for frenet error response
-      const { ShippingSevicesArray } = result
-
-      if (ShippingSevicesArray && Array.isArray(ShippingSevicesArray) && ShippingSevicesArray.length) {
-        if (ShippingSevicesArray[0].Error && ShippingSevicesArray[0].Msg) {
-          return res.status(400).send({
-            error: 'CALCULATE_REQUEST_ERR',
-            message: ShippingSevicesArray[0].Msg
-          })
-        }
-      }
-
-      return ShippingSevicesArray
-    })
-
-    .then(services => {
-      return services
-        .filter(service => !service.Error)
-        .map(service => {
-          return {
-            label: service.ServiceDescription,
-            carrier: service.Carrier,
-            service_name: service.ServiceDescription,
-            service_code: `FR${service.ServiceCode}`,
-            shipping_line: {
-              from: {
-                zip: config.from ? config.from.zip : '',
-                street: config.from ? config.from.street : '',
-                number: config.from ? config.from.number : ''
-              },
-              to: {
-                zip: to.zip,
-                name: to.name,
-                street: to.street,
-                number: to.number,
-                borough: to.borough,
-                city: to.city,
-                province_code: to.province_code
-              },
-              delivery_time: {
-                days: parseInt(service.DeliveryTime)
-              },
-              price: parseFloat(service.ShippingPrice),
-              total_price: parseFloat(service.ShippingPrice),
-              custom_fields: [
-                {
-                  field: 'by_frenet',
-                  value: 'true'
-                }
-              ]
-            }
-          }
-        })
-    })
-
-    .then(shippingServices => {
-      payload.shipping_services = shippingServices
-      res.send(payload)
-    })
-
-    .catch(err => {
+    return axios(opt)
+  }).then(({ data, status }) => {
+    // check for frenet error response
+    if (data && !data.ShippingSevicesArray) {
       return res.status(400).send({
-        err,
+        data,
         message: 'Unexpected Error Try Later'
       })
+    }
+
+    const { ShippingSevicesArray } = data
+
+    if (ShippingSevicesArray && Array.isArray(ShippingSevicesArray) && ShippingSevicesArray.length) {
+      if (ShippingSevicesArray[0].Error && ShippingSevicesArray[0].Msg) {
+        return res.status(400).send({
+          error: 'CALCULATE_REQUEST_ERR',
+          message: ShippingSevicesArray[0].Msg
+        })
+      }
+    }
+
+    return ShippingSevicesArray
+  }).then(services => {
+    return services
+      .filter(service => !service.Error)
+      .map(service => {
+        return {
+          label: service.ServiceDescription,
+          carrier: service.Carrier,
+          service_name: service.ServiceDescription,
+          service_code: `FR${service.ServiceCode}`,
+          shipping_line: {
+            from: config.from,
+            to: {
+              zip: to.zip,
+              name: to.name,
+              street: to.street,
+              number: to.number,
+              borough: to.borough,
+              city: to.city,
+              province_code: to.province_code
+            },
+            delivery_time: {
+              days: parseInt(service.DeliveryTime)
+            },
+            price: parseFloat(service.ShippingPrice),
+            total_price: parseFloat(service.ShippingPrice),
+            custom_fields: [
+              {
+                field: 'by_frenet',
+                value: 'true'
+              }
+            ]
+          }
+        }
+      })
+  }).then(shippingServices => {
+    payload.shipping_services = shippingServices
+    res.send(payload)
+  }).catch(err => {
+    console.log(err)
+    return res.status(400).send({
+      err,
+      message: 'Unexpected Error Try Later'
     })
+  })
 }
 
 const getDimension = (side, item) => {
