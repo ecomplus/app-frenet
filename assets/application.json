@@ -15,32 +15,24 @@
     "from": {
       "schema": {
         "type": "object",
-        "title": "Endereço do remetente das encomendas.",
-        "required": [
-          "zip",
-          "street",
-          "number"
-        ],
+        "title": "Remetente",
+        "description": "Configure o endereço para melhor descrição na geração de etiquetas.",
+        "required": ["zip"],
         "properties": {
-          "zip": {
-            "title": "CEP",
+          "zip": { "type": "string", "maxLength": 30, "title": "Código Postal" },
+          "street": { "type": "string", "maxLength": 200, "title": "Endereço" },
+          "number": { "type": "integer", "min": 1, "max": 9999999, "title": "Número" },
+          "borough": { "type": "string", "maxLength": 100, "title": "Bairro" },
+          "city": { "type": "string", "maxLength": 100, "title": "Cidade" },
+          "province": { "type": "string", "maxLength": 100, "title": "Estado" },
+          "province_code": {
             "type": "string",
-            "maxLength": 30,
-            "description": "ZIP (CEP, postal...) code"
+            "minLength": 2,
+            "maxLength": 2,
+            "pattern": "^[A-Z]+$",
+            "title": "Sigla do Estado"
           },
-          "street": {
-            "title": "Rua",
-            "type": "string",
-            "maxLength": 200,
-            "description": "Nome da rua"
-          },
-          "number": {
-            "title": "Número",
-            "type": "integer",
-            "min": 1,
-            "max": 9999999,
-            "description": "Número"
-          }
+          "country": { "type": "string", "maxLength": 50, "title": "País" }
         }
       },
       "hide": true
@@ -70,15 +62,8 @@
   "authentication": true,
   "auth_callback_uri": "https://frenet.ecomplus.biz/ecom/auth-callback",
   "auth_scope": {
-    "procedures": [
-      "POST"
-    ],
-    "orders": [
-      "GET"
-    ],
-    "orders/fulfillments": [
-      "POST",
-      "PATCH"
-    ]
+    "procedures": ["POST"],
+    "orders": ["GET"],
+    "orders/fulfillments": ["POST", "PATCH"]
   }
 }
