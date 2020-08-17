@@ -97,15 +97,7 @@ module.exports = () => (req, res) => {
           service_code: `FR${service.ServiceCode}`,
           shipping_line: {
             from: config.from,
-            to: {
-              zip: to.zip,
-              name: to.name,
-              street: to.street,
-              number: to.number,
-              borough: to.borough,
-              city: to.city,
-              province_code: to.province_code
-            },
+            to: to,
             delivery_time: {
               days: parseInt(service.DeliveryTime)
             },
