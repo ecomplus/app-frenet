@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.8](https://github.com/ecomclub/app-frenet/compare/v0.2.7...v0.2.8) (2020-08-17)
+
+
+### Bug Fixes
+
+* **calculate:** returning full address ([8fd6d6f](https://github.com/ecomclub/app-frenet/commit/8fd6d6f1e823a719cc7b64e012716b8fd299ca4c))
+
 ### [0.2.7](https://github.com/ecomclub/app-frenet/compare/v0.2.6...v0.2.7) (2020-08-10)
 
 ### [0.2.6](https://github.com/ecomclub/app-frenet/compare/v0.2.5...v0.2.6) (2020-06-26)
