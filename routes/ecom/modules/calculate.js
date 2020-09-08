@@ -18,7 +18,7 @@ module.exports = () => (req, res) => {
     shipping_services: []
   }
 
-  if (config.free_shippin_from_value) {
+  if (config.free_shipping_from_value) {
     payload.free_shipping_from_value = config.free_shipping_from_value
   }
 
