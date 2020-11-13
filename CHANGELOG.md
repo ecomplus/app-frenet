@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.10](https://github.com/ecomclub/app-frenet/compare/v0.2.9...v0.2.10) (2020-11-13)
+
+
+### Bug Fixes
+
+* **calcule-shipping:** fallbacks parsing frenet response delivery and price (originals) ([8b3624d](https://github.com/ecomclub/app-frenet/commit/8b3624d32ae3c7ee81652f13c4400b830311907e))
+* **deps:** update to @ecomplus/application-sdk@sqlite ([42284b4](https://github.com/ecomclub/app-frenet/commit/42284b4af409162e6abd96b52b15c455ad266e71))
+
 ### [0.2.9](https://github.com/ecomclub/app-frenet/compare/v0.2.8...v0.2.9) (2020-09-08)
 
 ### [0.2.8](https://github.com/ecomclub/app-frenet/compare/v0.2.7...v0.2.8) (2020-08-17)
