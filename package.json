@@ -6,7 +6,8 @@
   "private": true,
   "scripts": {
     "dev": "APP_NAME=frenet-dev APP_BASE_URI=https://talisson.pagekite.me ECOM_AUTH_DB=/var/dbs/frenet.sqlite LOGGER_OUTPUT=/var/log/nodejs/frenet.out LOGGER_ERRORS=/var/log/nodejs/frenet.error nodemon main.js",
-    "publish:market": "node ./scripts/market-publication.js"
+    "publish:market": "node ./scripts/market-publication.js",
+    "release": "standard-version"
   },
   "repository": {
     "type": "git",
@@ -25,11 +26,12 @@
   },
   "homepage": "https://github.com/ecomclub/app-frenet#readme",
   "devDependencies": {
-    "@commitlint/cli": "^7.5.2",
-    "@commitlint/config-conventional": "^7.5.0",
+    "@commitlint/cli": "^11.0.0",
+    "@commitlint/config-conventional": "^11.0.0",
     "dotenv": "^8.2.0",
     "husky": "^1.3.1",
-    "standard": "^12.0.1"
+    "standard": "^16.0.2",
+    "standard-version": "^9.0.0"
   },
   "husky": {
     "hooks": {
@@ -37,10 +39,9 @@
     }
   },
   "dependencies": {
-    "@ecomplus/application-sdk": "^1.13.0",
+    "@ecomplus/application-sdk": "^11.0.0-sqlite.1.14.0",
     "axios": "^0.19.1",
     "console-files": "^2.2.0",
-    "express": "^4.16.4",
-    "sqlite3": "^4.0.3"
+    "express": "^4.16.4"
   }
 }
