@@ -54,17 +54,15 @@ module.exports = () => (req, res) => {
       reject(err)
     }
   }).then(({ schema }) => {
-    let opt = {
+    return axios({
       url: 'http://api.frenet.com.br/shipping/quote',
       method: 'post',
       headers: {
         'Content-Type': 'application/json',
-        'token': config.frenet_access_token
+        token: config.frenet_access_token
       },
       data: schema
-    }
-
-    return axios(opt)
+    })
   }).then(({ data, status }) => {
     // check for frenet error response
     if (data && !data.ShippingSevicesArray) {
@@ -99,10 +97,11 @@ module.exports = () => (req, res) => {
             from: config.from,
             to: to,
             delivery_time: {
-              days: parseInt(service.DeliveryTime)
+              days: parseInt(service.DeliveryTime || service.OriginalDeliveryTime) || 14,
+              working_days: true
             },
-            price: parseFloat(service.ShippingPrice),
-            total_price: parseFloat(service.ShippingPrice),
+            price: parseFloat(service.OriginalShippingPrice || service.ShippingPrice) || 0,
+            total_price: parseFloat(service.ShippingPrice || service.OriginalShippingPrice) || 0,
             custom_fields: [
               {
                 field: 'by_frenet',
