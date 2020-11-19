@@ -1,11 +1,11 @@
 {
   "name": "app-frenet",
-  "version": "0.2.10",
+  "version": "0.2.13",
   "description": "E-Com Plus app to integrate Frenet shipping gateway",
   "main": "main.js",
   "private": true,
   "scripts": {
-    "dev": "APP_NAME=frenet-dev APP_BASE_URI=https://talisson.pagekite.me ECOM_AUTH_DB=/var/dbs/frenet.sqlite LOGGER_OUTPUT=/var/log/nodejs/frenet.out LOGGER_ERRORS=/var/log/nodejs/frenet.error nodemon main.js",
+    "dev": "APP_NAME=frenet-dev APP_BASE_URI=https://ecomplus.ngrok.io ECOM_AUTH_DB=/var/dbs/frenet.sqlite LOGGER_OUTPUT=/var/log/nodejs/frenet.out LOGGER_ERRORS=/var/log/nodejs/frenet.error nodemon main.js",
     "publish:market": "node ./scripts/market-publication.js",
     "release": "standard-version"
   },
@@ -40,7 +40,7 @@
   },
   "dependencies": {
     "@ecomplus/application-sdk": "^11.0.0-sqlite.1.14.0",
-    "axios": "^0.19.1",
+    "axios": "^0.19.2",
     "console-files": "^2.2.0",
     "express": "^4.16.4"
   }
