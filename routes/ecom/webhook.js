@@ -1,67 +1,51 @@
 'use strict'
 const logger = require('console-files')
-
-// read configured E-Com Plus app data
-// const getConfig = require(process.cwd() + '/lib/store-api/get-config')
+const { trackingCodes } = require('./../../lib/database')
 
 const ECHO_SUCCESS = 'SUCCESS'
 const ECHO_SKIP = 'SKIP'
 
-// database
-const { trackingCodes } = require('./../../lib/database')
+module.exports = (appSdk) => async (req, res) => {
+  const { storeId, body } = req
+  const orderId = body.resource_id
 
-module.exports = () => {
-  return (req, res) => {
-    const { storeId } = req
-    const trigger = req.body
+  const orderBody = await appSdk.apiRequest(storeId, `/orders/${orderId}.json`).then(({ response }) => response.data)
+  if (!orderBody) {
+    return res.status(500).end()
+  } // 503?
 
-    if (trigger.fields && trigger.fields.includes('shipping_lines')) {
-      const order = trigger.body
-      const shippingLines = order.shipping_lines.find(shipping => shipping.custom_fields.find(custom => custom.field === 'by_frenet'))
-      // has shipping_lines
-      if (shippingLines.tracking_codes && Array.isArray(shippingLines.tracking_codes)) {
-        // salve tracking code
-        const orderId = trigger.resource_id
-        const trackingCode = shippingLines.tracking_codes[0].code
-        // find tracking code at database
-        trackingCodes.get(orderId, trackingCode, storeId)
-
-          .then(() => {
-            // ignore if already saved
-            res.send(ECHO_SKIP)
-          })
-
-          .catch(err => {
-            // tracking code not found?
-            // save then
-            switch (err.name) {
-              case 'TrackingCodeNotFound':
-                const order = trigger.body
-                const shippingLines = order.shipping_lines.find(shipping => shipping.custom_fields.find(custom => custom.field === 'by_frenet'))
-
-                if (shippingLines.tracking_codes && Array.isArray(shippingLines.tracking_codes)) {
-                  let serviceCode = shippingLines.app.service_code
-
-                  trackingCodes
-                    // save tracking code
-                    .save(orderId, storeId, 0, trackingCode, serviceCode)
-                    // log
-                    .then(() => logger.log(`[!] Tracking code ${trackingCode} save for store #${storeId} / order --> ${orderId}`))
-                    // bye
-                    .then(() => res.send(ECHO_SUCCESS))
-                }
-                break
-
-              default:
-                res.send(ECHO_SKIP)
-                break
-            }
-          })
-      } else {
-        res.send(ECHO_SKIP)
-      }
-    } else {
-      res.send(ECHO_SKIP)
-    }
+  if (!orderBody.shipping_lines) {
+    return res.send(ECHO_SKIP)
   }
+
+  const promises = []
+  orderBody.shipping_lines.forEach((line) => {
+    if (line.custom_fields && line.custom_fields.find(({ field }) => field === 'by_frenet')) {
+      if (line.tracking_codes) {
+        line.tracking_codes.forEach(({ code }) => {
+          promises.push(trackingCodes.get(orderId, code, storeId)
+            .then(() => (ECHO_SKIP))
+            .catch(error => {
+              // trackcode not exists
+              // save has new
+              if (error.name === 'TrackingCodeNotFound') {
+                const { app } = line
+                return trackingCodes.save(orderId, storeId, 0, code, app.service_code)
+                  .then(() => (logger.log(`>> Codigo de rastreio ${code} salvo para o pedido ${orderId} / #${storeId}`)))
+                  .then({
+                    code,
+                    storeId
+                  })
+              }
+
+              return null
+            }))
+        })
+      }
+    }
+  })
+
+  Promise.all(promises).finally((r) => {
+    return res.send(ECHO_SKIP)
+  })
 }
