@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.16](https://github.com/ecomclub/app-frenet/compare/v0.2.15...v0.2.16) (2020-11-23)
+
+
+### Bug Fixes
+
+* parse notification_code to String ([102884a](https://github.com/ecomclub/app-frenet/commit/102884abde923878b8b30c8b34cbd33f6b6e4c89))
+
 ### [0.2.15](https://github.com/ecomclub/app-frenet/compare/v0.2.14...v0.2.15) (2020-11-23)
 
 
