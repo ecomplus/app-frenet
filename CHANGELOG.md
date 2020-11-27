@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.17](https://github.com/ecomclub/app-frenet/compare/v0.2.16...v0.2.17) (2020-11-27)
+
+
+### Features
+
+* **#12:** delete order codes delivered and codes not found for more than 15 days ([0e76e91](https://github.com/ecomclub/app-frenet/commit/0e76e91d5a8329b684a65695877d392f7cb5e735)), closes [#12](https://github.com/ecomclub/app-frenet/issues/12)
+
 ### [0.2.16](https://github.com/ecomclub/app-frenet/compare/v0.2.15...v0.2.16) (2020-11-23)
 
 
