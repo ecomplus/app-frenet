@@ -28,6 +28,7 @@ module.exports = () => (req, res) => {
   }
 
   // calculate
+  let took = Date.now()
   return new Promise((resolve, reject) => {
     try {
       const schema = {
@@ -72,6 +73,7 @@ module.exports = () => (req, res) => {
       })
     }
 
+    took = Date.now() - took
     const { ShippingSevicesArray } = data
 
     if (ShippingSevicesArray && Array.isArray(ShippingSevicesArray) && ShippingSevicesArray.length) {
@@ -106,6 +108,10 @@ module.exports = () => (req, res) => {
               {
                 field: 'by_frenet',
                 value: 'true'
+              },
+              {
+                field: 'frenet:took',
+                value: String(took)
               }
             ]
           }
