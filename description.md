@@ -4,7 +4,7 @@
 
 ### Cotações de frete no seu e-commerce
 
-### Faça o frete virar marketing da sua loja virtual. 
+### Faça o frete virar marketing da sua loja virtual
 
 Aproveite uma ferramenta que possibilita integração com mais de 245 transportadoras, além dos correios.
 
