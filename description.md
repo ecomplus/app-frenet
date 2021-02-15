@@ -2,7 +2,6 @@
 
 Liberdade para conectar qualquer transportadora, motoboy e correios na sua loja virtual.
 
-
 ### Cotações de frete no seu e-commerce
 
 ### Faça o frete virar marketing da sua loja virtual
