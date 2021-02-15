@@ -7,7 +7,7 @@ Liberdade para conectar qualquer transportadora, motoboy e correios na sua loja 
 
 ### Faça o frete virar marketing da sua loja virtual
 
-Aproveite uma ferramenta que possibilita integração com mais de 245 transportadoras, além dos correios.
+Aproveite uma ferramenta que possibilita integração com mais de 245 transportadoras, além dos Correios.
 
 * Não perca mais vendas em sua loja por causa de frete caro
 
