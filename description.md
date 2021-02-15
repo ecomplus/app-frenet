@@ -1,6 +1,7 @@
-# Liberdade para conectar qualquer transportadora, motoboy e correios na sua loja virtual
+# Frenet
 
-## Frenet
+Liberdade para conectar qualquer transportadora, motoboy e correios na sua loja virtual.
+
 
 ### Cotações de frete no seu e-commerce
 
