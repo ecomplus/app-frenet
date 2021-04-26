@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.23](https://github.com/ecomclub/app-frenet/compare/v0.2.22...v0.2.23) (2021-04-26)
+
+
+### Bug Fixes
+
+* **tracking-codes:** check last status to prevent duplication ([84a6613](https://github.com/ecomclub/app-frenet/commit/84a661364e7e7dd394d58935c83ce03642b2b6ea))
+
 ### [0.2.22](https://github.com/ecomclub/app-frenet/compare/v0.2.21...v0.2.22) (2021-04-26)
 
 ### [0.2.21](https://github.com/ecomclub/app-frenet/compare/v0.2.20...v0.2.21) (2021-04-26)

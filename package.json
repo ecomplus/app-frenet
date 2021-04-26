@@ -1,6 +1,6 @@
 {
   "name": "app-frenet",
-  "version": "0.2.22",
+  "version": "0.2.23",
   "description": "E-Com Plus app to integrate Frenet shipping gateway",
   "main": "main.js",
   "private": true,
