@@ -29,7 +29,6 @@ ecomAuth.then(appSdk => {
 
   // tracking code services
   require('./../lib/tracking-codes')(appSdk)
-  require('./../lib/remove-tracking-codes')()
 })
 
 ecomAuth.catch(err => {
