@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.20](https://github.com/ecomclub/app-frenet/compare/v0.2.19...v0.2.20) (2021-04-26)
+
+
+### Bug Fixes
+
+* **local:** no more 'remore-tracking-codes' separated script ([100d24d](https://github.com/ecomclub/app-frenet/commit/100d24d1597c543365c31e772f5123d55943e7f8))
+
 ### [0.2.19](https://github.com/ecomclub/app-frenet/compare/v0.2.18...v0.2.19) (2021-04-26)
 
 
