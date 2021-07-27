@@ -134,9 +134,9 @@ const getDimension = (side, item) => {
     const { value, unit } = item.dimensions[side]
     switch (unit) {
       case 'm':
-        return value / 100
+        return value * 100
       case 'dm':
-        return value / 10
+        return value * 10
       case 'cm':
         return value
     }
