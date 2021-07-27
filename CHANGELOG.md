@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.28](https://github.com/ecomclub/app-frenet/compare/v0.2.27...v0.2.28) (2021-07-27)
+
+
+### Bug Fixes
+
+* **calculate:** fix parsing dimensions units ([a1ab961](https://github.com/ecomclub/app-frenet/commit/a1ab961054701238e1ce8c0259b002cd9a2f4f73))
+* **deps:** update @ecomplus/application-sdk to v1.15.4 ([15871d9](https://github.com/ecomclub/app-frenet/commit/15871d97646605688b0b62e0d5d02057b53ae94a))
+
 ### [0.2.27](https://github.com/ecomclub/app-frenet/compare/v0.2.26...v0.2.27) (2021-04-26)
 
 ### [0.2.26](https://github.com/ecomclub/app-frenet/compare/v0.2.25...v0.2.26) (2021-04-26)
