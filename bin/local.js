@@ -18,6 +18,7 @@ ecomAuth.then(appSdk => {
     const { triggers } = procedures[0]
     if (triggers && triggers.length) {
       appSdk.configureSetup(procedures, (err, { storeId }) => {
+        console.log(JSON.stringify(procedures))
         if (!err) {
           logger.log('--> Setup store #' + storeId)
         } else if (!err.appAuthRemoved && (!err.response || err.response.status !== 401)) {
