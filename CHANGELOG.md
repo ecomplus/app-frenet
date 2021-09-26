@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.29](https://github.com/ecomclub/app-frenet/compare/v0.2.18...v0.2.29) (2021-09-26)
+
+
+### Bug Fixes
+
+* **16:** avoiding to save invalid tracking codes ([11ffada](https://github.com/ecomclub/app-frenet/commit/11ffada2b96032dcd33df05326318ec93c6bfc57))
+* **calculate:** fix parsing dimensions units ([a1ab961](https://github.com/ecomclub/app-frenet/commit/a1ab961054701238e1ce8c0259b002cd9a2f4f73))
+* **clear-tracking-codes:** fix handling Date object ([c3149bb](https://github.com/ecomclub/app-frenet/commit/c3149bb15b696ef520456002cb76cdc69e99410a))
+* **deps:** update @ecomplus/application-sdk to v1.15.4 ([15871d9](https://github.com/ecomclub/app-frenet/commit/15871d97646605688b0b62e0d5d02057b53ae94a))
+* **local:** no more 'remore-tracking-codes' separated script ([100d24d](https://github.com/ecomclub/app-frenet/commit/100d24d1597c543365c31e772f5123d55943e7f8))
+* **tracking-codes:** check last status to prevent duplication ([84a6613](https://github.com/ecomclub/app-frenet/commit/84a661364e7e7dd394d58935c83ce03642b2b6ea))
+* **tracking-codes:** must schedule clear old codes ([5e8bd56](https://github.com/ecomclub/app-frenet/commit/5e8bd56f1512ba1d6b8b46b6410833a522d6b719))
+* **tracking:** better handling promise chain ([9d24036](https://github.com/ecomclub/app-frenet/commit/9d240364d4d7fb3348132362b896166dde36a91d))
+* **tracking:** properly reject/resolve tracking codes update all promise ([d868c9b](https://github.com/ecomclub/app-frenet/commit/d868c9bd80839f84e316fa99d700cc36ab8b83f5))
+* **tracking:** update order with last tracking event only (should not replicate all every time) ([cc216ae](https://github.com/ecomclub/app-frenet/commit/cc216ae2d0a4e464039f5f073f36f70cf28e9a1f))
+* **update-fulfillment:** read oder first to check not changed status and preserve notes ([cf358bf](https://github.com/ecomclub/app-frenet/commit/cf358bfae96fadfe155f59d9f03f38b32b19865e))
+
 ### [0.2.28](https://github.com/ecomclub/app-frenet/compare/v0.2.27...v0.2.28) (2021-07-27)
 
 
