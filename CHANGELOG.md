@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.30](https://github.com/ecomclub/app-frenet/compare/v0.2.29...v0.2.30) (2021-09-26)
+
+
+### Bug Fixes
+
+* removing delivered tracking codes every day instead remove code after change status ([69e2f65](https://github.com/ecomclub/app-frenet/commit/69e2f6546c0874e926d523e7fbe19bdf9e300de5))
+
 ### [0.2.29](https://github.com/ecomclub/app-frenet/compare/v0.2.18...v0.2.29) (2021-09-26)
 
 
