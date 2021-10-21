@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.31](https://github.com/ecomclub/app-frenet/compare/v0.2.30...v0.2.31) (2021-10-21)
+
+
+### Bug Fixes
+
+* **deps:** update @ecomplus/application-sdk to v1.15.5 sqlite ([92bb1d8](https://github.com/ecomclub/app-frenet/commit/92bb1d81e981ada11e75ad05f62357c08d905eb4))
+
 ### [0.2.30](https://github.com/ecomclub/app-frenet/compare/v0.2.29...v0.2.30) (2021-09-26)
 
 
