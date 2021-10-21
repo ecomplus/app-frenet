@@ -39,7 +39,7 @@
     }
   },
   "dependencies": {
-    "@ecomplus/application-sdk": "^11.0.0-sqlite.1.15.4",
+    "@ecomplus/application-sdk": "^11.0.0-sqlite.1.15.5",
     "axios": "^0.19.2",
     "console-files": "^2.2.0",
     "express": "^4.16.4"
