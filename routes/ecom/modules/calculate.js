@@ -91,10 +91,17 @@ module.exports = () => (req, res) => {
       .filter(service => !service.Error)
       .map(service => {
         return {
-          label: service.ServiceDescription,
+          label: service.ServiceDescription.length > 50 
+            ? service.Carrier 
+            : service.ServiceDescription,
           carrier: service.Carrier,
-          service_name: service.ServiceDescription,
+          service_name: service.ServiceDescription.length > 70 
+            ? service.Carrier 
+            : service.ServiceDescription,
           service_code: `FR${service.ServiceCode}`,
+          delivery_instructions: service.ServiceDescription.length > 50 
+            ? service.ServiceDescription 
+            : undefined,
           shipping_line: {
             from: config.from,
             to: to,
