@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.32](https://github.com/ecomclub/app-frenet/compare/v0.2.31...v0.2.32) (2022-10-04)
+
+
+### Bug Fixes
+
+* **calculate-shipping:** use delivery instructions when service description is greater than 50 ([#18](https://github.com/ecomclub/app-frenet/issues/18)) [skip ci] ([d6f4d60](https://github.com/ecomclub/app-frenet/commit/d6f4d606f583e7ffc2436cfad764ee6662d933a9))
+* **calculate:** properly passing validated services when first one fails [[#19](https://github.com/ecomclub/app-frenet/issues/19)] ([02d7700](https://github.com/ecomclub/app-frenet/commit/02d7700c8c2a40bcda6d6d9303ad7889e28b530c))
+* eventType 0 is shipped ([#17](https://github.com/ecomclub/app-frenet/issues/17)) [skip ci] ([12e76e7](https://github.com/ecomclub/app-frenet/commit/12e76e75d056a4b3669e157c590cb6337589e0bb))
+
 ### [0.2.31](https://github.com/ecomclub/app-frenet/compare/v0.2.30...v0.2.31) (2021-10-21)
 
 
