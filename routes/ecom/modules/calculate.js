@@ -64,7 +64,7 @@ module.exports = () => (req, res) => {
       },
       data: schema
     })
-  }).then(({ data, status }) => {
+  }).then(({ data }) => {
     // check for frenet error response
     if (data && !data.ShippingSevicesArray) {
       return res.status(400).send({
@@ -75,32 +75,33 @@ module.exports = () => (req, res) => {
 
     took = Date.now() - took
     const { ShippingSevicesArray } = data
-
-    if (ShippingSevicesArray && Array.isArray(ShippingSevicesArray) && ShippingSevicesArray.length) {
-      if (ShippingSevicesArray[0].Error && ShippingSevicesArray[0].Msg) {
-        return res.status(400).send({
-          error: 'CALCULATE_REQUEST_ERR',
-          message: ShippingSevicesArray[0].Msg
-        })
-      }
+    if (
+      Array.isArray(ShippingSevicesArray) &&
+      ShippingSevicesArray[0] &&
+      ShippingSevicesArray[0].Error &&
+      !ShippingSevicesArray.find(({ Error }) => Error === false)
+    ) {
+      return res.status(400).send({
+        error: 'CALCULATE_REQUEST_ERR',
+        message: ShippingSevicesArray[0].Msg
+      })
     }
-
     return ShippingSevicesArray
   }).then(services => {
-    return services
+    return Array.isArray(services) && services
       .filter(service => !service.Error)
       .map(service => {
         return {
-          label: service.ServiceDescription.length > 50 
-            ? service.Carrier 
+          label: service.ServiceDescription.length > 50
+            ? service.Carrier
             : service.ServiceDescription,
           carrier: service.Carrier,
-          service_name: service.ServiceDescription.length > 70 
-            ? service.Carrier 
+          service_name: service.ServiceDescription.length > 70
+            ? service.Carrier
             : service.ServiceDescription,
           service_code: `FR${service.ServiceCode}`,
-          delivery_instructions: service.ServiceDescription.length > 50 
-            ? service.ServiceDescription 
+          delivery_instructions: service.ServiceDescription.length > 50
+            ? service.ServiceDescription
             : undefined,
           shipping_line: {
             from: config.from,
@@ -125,8 +126,10 @@ module.exports = () => (req, res) => {
         }
       })
   }).then(shippingServices => {
-    payload.shipping_services = shippingServices
-    res.send(payload)
+    if (shippingServices) {
+      payload.shipping_services = shippingServices
+      res.send(payload)
+    }
   }).catch(err => {
     console.log(err)
     return res.status(400).send({
