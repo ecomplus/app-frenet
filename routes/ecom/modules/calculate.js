@@ -62,6 +62,7 @@ module.exports = () => (req, res) => {
         'Content-Type': 'application/json',
         token: config.frenet_access_token
       },
+      timeout: (params.is_checkout_confirmation ? 8000 : 5000),
       data: schema
     })
   }).then(({ data }) => {
