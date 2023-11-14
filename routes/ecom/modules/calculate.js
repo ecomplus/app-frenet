@@ -38,13 +38,14 @@ module.exports = () => (req, res) => {
         ShippingItemArray: []
       }
       items.forEach(item => {
-        const { weight, quantity } = item
+        const { weight, quantity, sku } = item
         schema.ShippingItemArray.push({
           Weight: weight ? (weight.unit && weight.unit === 'g') ? (weight.value / 1000) : weight.value : undefined,
           Length: getDimension('length', item),
           Height: getDimension('height', item),
           Width: getDimension('width', item),
-          Quantity: quantity
+          Quantity: quantity,
+          SKU: sku
         })
       })
       resolve({ schema })
