@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.35](https://github.com/ecomclub/app-frenet/compare/v0.2.34...v0.2.35) (2025-03-09)
+
+
+### Features
+
+* config option to replace shipping method labels ([5726988](https://github.com/ecomclub/app-frenet/commit/572698824f77d0ac197622ac10b4ecb8d0ff7aca))
+
 ### [0.2.34](https://github.com/ecomclub/app-frenet/compare/v0.2.33...v0.2.34) (2023-11-14)
 
 ### [0.2.33](https://github.com/ecomclub/app-frenet/compare/v0.2.32...v0.2.33) (2023-01-14)
