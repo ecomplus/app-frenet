@@ -3,7 +3,7 @@
   "title": "Frenet",
   "slug": "frenet",
   "paid": false,
-  "version": "0.2.7",
+  "version": "0.2.35",
   "type": "external",
   "modules": {
     "calculate_shipping": {
