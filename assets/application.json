@@ -66,87 +66,30 @@
       },
       "hide": false
     },
-    "warehouses": {
+    "service_labels": {
       "schema": {
-        "title": "Armazéns (multi CD)",
-        "description": "Origens e destinos para cada centro de distribuição",
+        "title": "Rótulo dos serviços",
+        "description": "Configure para substituir os nomes das formas de envio retornados pela Frenet.",
         "type": "array",
-        "maxItems": 30,
+        "maxItems": 6,
         "items": {
-          "title": "Centro de distribuição",
+          "title": "Serviço de entrega",
           "type": "object",
           "required": [
-            "zip"
+            "frenet_label",
+            "label"
           ],
-          "additionalProperties": false,
           "properties": {
-            "code": {
+            "frenet_label": {
               "type": "string",
-              "maxLength": 30,
-              "pattern": "^[A-Za-z0-9-_]{2,30}$",
-              "title": "Código do CD"
+              "title": "Descrição na Frenet",
+              "description": "Descrição da forma de envio retornado pela Frenet"
             },
-            "doc": {
+            "new_label": {
               "type": "string",
-              "maxLength": 255,
-              "title": "Documento da filial",
-              "description": "CNPJ da filial associado à sua conta"
-            },
-            "zip": {
-              "type": "string",
-              "maxLength": 9,
-              "pattern": "^[0-9]{5}-?[0-9]{3}$",
-              "title": "CEP de origem",
-              "description": "Código postal do remetente para cálculo do frete"
-            },
-            "posting_deadline": {
-              "title": "Prazo de envio do CD",
-              "type": "object",
-              "required": [
-                "days"
-              ],
-              "additionalProperties": false,
-              "properties": {
-                "days": {
-                  "type": "integer",
-                  "minimum": 0,
-                  "maximum": 999999,
-                  "title": "Número de dias",
-                  "description": "Dias de prazo para postar os produtos após a compra"
-                },
-                "working_days": {
-                  "type": "boolean",
-                  "default": true,
-                  "title": "Dias úteis"
-                },
-                "after_approval": {
-                  "type": "boolean",
-                  "default": true,
-                  "title": "Após aprovação do pagamento"
-                }
-              }
-            },
-            "zip_range": {
-              "title": "Faixa de CEP atendida",
-              "type": "object",
-              "required": [
-                "min",
-                "max"
-              ],
-              "properties": {
-                "min": {
-                  "type": "integer",
-                  "minimum": 10000,
-                  "maximum": 999999999,
-                  "title": "CEP inicial"
-                },
-                "max": {
-                  "type": "integer",
-                  "minimum": 10000,
-                  "maximum": 999999999,
-                  "title": "CEP final"
-                }
-              }
+              "maxLength": 50,
+              "title": "Novo rótulo",
+              "description": "Nome do serviço exibido aos clientes"
             }
           }
         }
